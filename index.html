@@ -74,7 +74,17 @@
                                         <div class="connect-btn ">
                                             
                                             <a href="#" class="popup" id="myBtn">Contact Us</a>
-                                        </div>                          
+                                        </div>   
+                                        
+                                        <!-- REGISTER BUTTON -->
+<div class="connect-btn">
+  <a href="#" class="idl-popup" id="idl-myBtn">Register Now</a>
+</div>
+
+
+    
+                                        
+                                        
                                     </div> 
                                 </nav>
                             </div>
@@ -1544,6 +1554,90 @@
                 </div>
             </footer>
         </div>
+
+
+        <!-- REGISTRATION POPUP MODAL -->
+<div id="idl-modal" class="idl-modal">
+  <div class="idl-modal-content">
+    <span class="idl-close">&times;</span>
+    <h2 style="color:#B88644">Registration Form</h2>
+
+    <form id="idl-registration-form" enctype="multipart/form-data">
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Age</label>
+      <input type="number" name="age" required>
+
+      <label>Gender</label>
+      <select name="gender" required>
+        <option value="">Select</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+
+      <label>Height (in cm)</label>
+      <input type="number" name="height" required>
+
+      <label>Skill</label>
+      <select name="skill" required>
+        <option>Dancing</option>
+        <option>Acting</option>
+      </select>
+
+      <label>City</label>
+      <input type="text" name="city" required>
+
+      <label>Education</label>
+      <input type="text" name="education" required>
+
+      <label>Skin Tone</label>
+      <select name="skin_tone">
+        <option>Fair</option>
+        <option>Medium</option>
+        <option>Dark</option>
+      </select>
+
+      <label>Mother Tongue</label>
+      <select name="mother_tongue">
+        <option>Hindi</option>
+        <option>English</option>
+        <option>Marathi</option>
+        <option>Gujarati</option>
+        <option>Tamil</option>
+        <option>Telugu</option>
+        <option>Bengali</option>
+        <option>Punjabi</option>
+      </select>
+
+      <label>City for Audition</label>
+      <select name="audition_city">
+        <option>Mumbai</option>
+        <option>Delhi</option>
+        <option>Chennai</option>
+        <option>Kolkata</option>
+        <option>Hyderabad</option>
+      </select>
+
+    <label>Profile Photos (max 6)</label>
+  <input type="file" name="photos" id="idl-photoUpload" accept="image/*" multiple required>
+
+  <label>Introduction Video (max 60s)</label>
+  <input type="file" name="video" id="idl-videoUpload" accept="video/*">
+
+  <button type="submit">Submit</button>
+    </form>
+
+    <!-- Add payment options div -->
+<div id="idl-paymentOptions" style="display:none;">
+  <p>Payment successful! Your registration is complete.</p>
+</div>
+  </div>
+</div>
+
+
+
         <div class="overlay"></div>
         <div class="popup_box">
             <h2>Contact Us</h2>
@@ -1574,12 +1668,81 @@
         <script src="../cdn.jsdelivr.net/npm/jquery-validation%401.19.3/dist/additional-methods.min.js"></script>
         <script src="http://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="js/script.js"></script>
+
+
+<!-- ✅ Cloudinary Upload + Modal Logic -->
+<script>
+  const idlModal = document.getElementById("idl-modal");
+  const idlBtn = document.getElementById("idl-myBtn");
+  const idlClose = document.getElementsByClassName("idl-close")[0];
+  const idlForm = document.getElementById("idl-registration-form");
+  const idlPaymentOptions = document.getElementById("idl-paymentOptions");
+
+  // Open modal
+  idlBtn.onclick = function(e) {
+    e.preventDefault();
+    idlModal.style.display = "block";
+  };
+
+  // Close modal
+  idlClose.onclick = function() {
+    idlModal.style.display = "none";
+  };
+
+  // Close when clicking outside
+  window.onclick = function(e) {
+    if (e.target == idlModal) {
+      idlModal.style.display = "none";
+    }
+  };
+
+  // Handle Cloudinary Upload
+  idlForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const cloudName = "desn39mcr"; // your Cloudinary cloud name
+    const uploadPreset = "idl_unsigned"; // your preset name (unsigned preset recommended)
+
+    const photoFiles = document.getElementById("idl-photoUpload").files;
+    const videoFile = document.getElementById("idl-videoUpload").files[0];
+
+    const uploadedPhotos = [];
+    let uploadedVideoUrl = "";
+
+    async function uploadToCloudinary(file) {
+      const url = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+      const res = await fetch(url, { method: "POST", body: formData });
+      return res.json();
+    }
+
+    // Upload all photos
+    for (let file of photoFiles) {
+      const result = await uploadToCloudinary(file);
+      uploadedPhotos.push(result.secure_url);
+    }
+
+    // Upload video if exists
+    if (videoFile) {
+      const result = await uploadToCloudinary(videoFile);
+      uploadedVideoUrl = result.secure_url;
+    }
+
+    console.log("✅ Uploaded Photos:", uploadedPhotos);
+    console.log("✅ Uploaded Video:", uploadedVideoUrl);
+
+    alert("✅ Files uploaded successfully! Please complete your payment of ₹1499.");
+
+    idlPaymentOptions.style.display = "block";
+    idlForm.style.display = "none";
+  });
+</script>
+
+
     </body>
 
 
 <!-- Mirrored from mccc.in/index by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Sep 2025 05:00:13 GMT -->
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> aebc9cabaa5442a85b440b946480af6e41c8782e
